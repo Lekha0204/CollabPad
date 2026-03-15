@@ -1,5 +1,7 @@
 package com.collabpad.controller;
 
+import com.collabpad.dto.PadDto;
+import com.collabpad.dto.UpdatePadRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.collabpad.model.Pad;
 import com.collabpad.service.PadService;
 
 @RestController
@@ -22,22 +23,21 @@ public class PadController {
     }
 
     @PostMapping
-    public Pad createPad() {
+    public PadDto createPad() {
         return padService.createPad();
     }
 
     @GetMapping("/{code}")
-    public Pad getPad(@PathVariable String code) {
+    public PadDto getPad(@PathVariable String code) {
         return padService.getPad(code)
                 .orElseThrow(() -> new RuntimeException("Pad not found"));
     }
 
     @PutMapping("/{code}")
-    public Pad updatePad(
+    public PadDto updatePad(
             @PathVariable String code,
-            @RequestBody String encryptedContent) {
+            @RequestBody UpdatePadRequest request) {
 
-        return padService.updatePad(code, encryptedContent);
+        return padService.updatePad(code, request);
     }
-
 }

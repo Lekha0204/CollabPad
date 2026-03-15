@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getPad, updatePad } from "../api/padApi";
 import { encrypt, decrypt } from "../utils/encryption";
 
 function TextEditorPage() {
   const { code } = useParams();
+  const navigate = useNavigate();
   const [content, setContent] = useState("");
-  const secretKey = import.meta.env.VITE_ENCRYPTION_SECRET || "collabpad-secret";
+  const secretKey = import.meta.env.VITE_ENCRYPTION_SECRET;
 
   const loadPad = async () => {
     try {
       const res = await getPad(code);
-      if (res.data.encryptedContent) {
-        const decrypted = decrypt(res.data.encryptedContent, secretKey);
+      if (res.data.encryptedText) {
+        const decrypted = decrypt(res.data.encryptedText, secretKey);
         setContent(decrypted);
       }
     } catch (err) {
@@ -23,8 +24,8 @@ function TextEditorPage() {
   const handleSave = async () => {
     try {
       const encrypted = encrypt(content, secretKey);
-      await updatePad(code, encrypted);
-      alert("Saved successfully ✅");
+      await updatePad(code, { encryptedText: encrypted });
+      alert("Saved successfully");
     } catch (err) {
       console.log(err);
     }
@@ -36,22 +37,39 @@ function TextEditorPage() {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Text Editor: {code}</h2>
-
-      <div style={{ marginBottom: "10px" }}>
-        <button onClick={handleSave}>💾 Save</button>
-        <button onClick={loadPad} style={{ marginLeft: "10px" }}>
-          🔄 Refresh
-        </button>
+    <div className="tech-container">
+      <div className="top-nav">
+        <h2>
+          <span style={{ color: "#888" }}>PAD /</span> {code}
+          <span style={{ fontSize: "0.8rem", color: "#666", marginLeft: "10px", fontWeight: "normal" }}>[TEXT]</span>
+        </h2>
+        <button className="nav-button" onClick={handleSave}>SAVE</button>
+        <button className="nav-button" onClick={loadPad}>SYNC</button>
+        <button className="nav-button" onClick={() => navigate("/")}>EXIT</button>
       </div>
 
-      <textarea
-        rows="20"
-        cols="100"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+      <div className="editor-workspace">
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          spellCheck="false"
+          style={{
+            width: "100%",
+            height: "100%",
+            boxSizing: "border-box",
+            padding: "20px",
+            backgroundColor: "transparent",
+            color: "#e0e0e0",
+            border: "none",
+            outline: "none",
+            resize: "none",
+            fontFamily: "'Courier New', Courier, monospace",
+            fontSize: "14px",
+            lineHeight: "1.6",
+          }}
+          placeholder="Start typing..."
+        />
+      </div>
     </div>
   );
 }

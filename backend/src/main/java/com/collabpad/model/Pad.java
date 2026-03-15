@@ -25,12 +25,12 @@ public class Pad {
     private String padCode;
 
     @Column(columnDefinition = "TEXT")
-    private String encryptedContent;
+    private String encryptedText;
 
-    // @Column(columnDefinition = "TEXT")
-    // private String encryptedCode;
+    @Column(columnDefinition = "TEXT")
+    private String encryptedCode;
 
-    // private String language;
+    private String language;
 
     
 }

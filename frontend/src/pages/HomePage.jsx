@@ -6,6 +6,7 @@ function HomePage() {
   const [code, setCode] = useState("");
   const [activePad, setActivePad] = useState(null);
   const navigate = useNavigate();
+
   const newPad = async () => {
     try {
       const res = await createPad();
@@ -14,6 +15,7 @@ function HomePage() {
       console.error(err);
     }
   };
+
   const handleJoin = () => {
     if (!code.trim()) return;
     setActivePad(code.trim());
@@ -31,33 +33,35 @@ function HomePage() {
           gap: "15px",
         }}
       >
-        <h1>Pad Code: {activePad}</h1>
-        <h3>What would you like to open?</h3>
+        <h1 style={{ marginBottom: "5px" }}>{activePad}</h1>
+        <h3 style={{ color: "#888", fontWeight: "400", marginTop: "0", marginBottom: "30px" }}>
+          Select Workspace
+        </h3>
         
         <button 
           onClick={() => navigate(`/pad/${activePad}/text`)}
-          style={{ padding: "10px 20px", width: "250px" }}
+          style={{ width: "250px", textAlign: "left", paddingLeft: "30px" }}
         >
-          📝 Text Editor
+          &gt; Text Editor
         </button>
         <button 
           onClick={() => navigate(`/pad/${activePad}/code`)}
-          style={{ padding: "10px 20px", width: "250px" }}
+          style={{ width: "250px", textAlign: "left", paddingLeft: "30px" }}
         >
-          💻 Code Editor
+          &gt; Code Editor
         </button>
         <button 
           onClick={() => navigate(`/pad/${activePad}/file`)}
-          style={{ padding: "10px 20px", width: "250px" }}
+          style={{ width: "250px", textAlign: "left", paddingLeft: "30px" }}
         >
-          📁 File Upload/Download
+          &gt; File Transfer
         </button>
         
         <button 
           onClick={() => setActivePad(null)}
-          style={{ padding: "5px 10px", marginTop: "20px", backgroundColor: "#666", color: "white" }}
+          style={{ width: "250px", marginTop: "20px", background: "transparent", borderStyle: "dashed" }}
         >
-          ⬅️ Back
+          Back
         </button>
       </div>
     );
@@ -73,36 +77,31 @@ function HomePage() {
         flexDirection: "column",
       }}
     >
-      <h1>CollabPad</h1>
+      <h1 style={{ letterSpacing: "2px", fontSize: "3rem" }}>CollabPad</h1>
+      <p style={{ color: "#666", marginTop: "-20px", marginBottom: "40px" }}>Secure. Sync. Store.</p>
 
-      <input
-        type="text"
-        placeholder="Enter pad code..."
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        style={{ padding: "10px", width: "250px" }}
-      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          type="text"
+          placeholder="Access Code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          style={{ width: "200px" }}
+        />
+        <button onClick={handleJoin}>Join</button>
+      </div>
 
-      <br />
-      {/* <div>
-        <button onClick={() => setMode("text")}>Text Editor</button>
-        <button onClick={() => setMode("code")}>Code Editor</button>
-      </div> */}
-      <button
-        onClick={handleJoin}
-        style={{ padding: "10px 20px", marginTop: "15px" }}
-      >
-        Open Pad
-      </button>
+      <div style={{ margin: "20px 0", color: "#444" }}>— or —</div>
 
       <button
         onClick={newPad}
-        style={{ padding: "10px 20px", marginTop: "15px" }}
+        style={{ width: "282px" }}
       >
-        New Pad
+        Create New Session
       </button>
     </div>
   );
 }
 
 export default HomePage;
+
